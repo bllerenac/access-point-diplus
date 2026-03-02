@@ -20,13 +20,13 @@ Entra por SSH a tu dispositivo (`ssh root@192.168.137.123`) y ejecuta el siguien
 tee /etc/systemd/system/create_ap.service << 'EOF'
 [Unit]
 Description=WiFi Access Point (Repeater Mode)
-After=network.target
+After=network.target wifi-autoconnect.service
 
 [Service]
 Type=simple
 
 # Detenemos cualquier instancia anterior de create_ap
-ExecStartPre=/mnt/storage/create_ap/create_ap --stop wlan0
+ExecStartPre=/mnt/storage/www/access-point-diplus/create_ap --stop wlan0
 ExecStartPre=/bin/rm -rf /tmp/create_ap.*
 ExecStartPre=/bin/sleep 2
 
@@ -34,9 +34,9 @@ ExecStartPre=/bin/sleep 2
 
 # Iniciamos create_ap en Modo Concurrente (AP+STA) usando la misma interfaz wlan0
 # Sintaxis: create_ap <interface_ap_virtual> <interface_con_internet> <SSID> <Password>
-ExecStart=/mnt/storage/create_ap/create_ap wlan0 wlan0 DIPLUS31 '12345678'
+ExecStart=/mnt/storage/www/access-point-diplus/create_ap wlan0 wlan0 WLANVT31 '12345678'
 
-ExecStop=/mnt/storage/create_ap/create_ap --stop wlan0
+ExecStop=/mnt/storage/www/access-point-diplus/create_ap --stop wlan0
 ExecStopPost=/bin/rm -rf /tmp/create_ap.*
 Restart=on-failure
 RestartSec=10s
